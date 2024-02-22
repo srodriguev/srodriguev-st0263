@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+// Definición del servicio P2P
+service P2PService {
+    // Método para buscar un recurso en la red P2P
+    rpc BuscarRecurso(BuscarRecursoRequest) returns (BuscarRecursoResponse) {}
+
+    // Método para transferir un recurso entre peers
+    rpc TransferirRecurso(TransferirRecursoRequest) returns (TransferirRecursoResponse) {}
+}
+
+// Mensaje de solicitud para buscar un recurso
+message BuscarRecursoRequest {
+    // El nombre o identificador del recurso a buscar
+    string nombre_recurso = 1;
+}
+
+// Mensaje de respuesta para la búsqueda de un recurso
+message BuscarRecursoResponse {
+    // La dirección IP o la URL del peer que tiene el recurso
+    string direccion_peer = 1;
+}
+
+// Mensaje de solicitud para transferir un recurso
+message TransferirRecursoRequest {
+    // La dirección IP o la URL del peer que solicita el recurso
+    string direccion_peer_solicitante = 1;
+    // El nombre o identificador del recurso a transferir
+    string nombre_recurso = 2;
+}
+
+// Mensaje de respuesta para la transferencia de un recurso
+message TransferirRecursoResponse {
+    // El contenido del recurso que se está transfiriendo
+    string contenido_recurso = 1;
+}
