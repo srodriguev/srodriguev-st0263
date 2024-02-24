@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package peer;
+
+// Mensaje para representar un archivo
+message File {
+  string name = 1;
+  bytes content = 2;
+}
+
+// Definición del servicio del peer
+service PeerServer {
+  // Método para que un peer cargue un archivo en este peer
+  rpc Upload(File) returns (google.protobuf.Empty);
+
+  // Método para que un peer descargue un archivo de otro peer
+  rpc Download(string) returns (File);
+}

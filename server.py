@@ -1,29 +1,70 @@
-import grpc
-from concurrent import futures
-import service_pb2
-import service_pb2_grpc
+from flask import Flask, request, jsonify
+import sys
+import configparser
 
-# Implementación del servidor P2P
-class P2PServicer(Servicio_pb2_grpc.P2PServiceServicer):
-    def BuscarRecurso(self, request, context):
-        # Lógica para buscar el recurso en el peer
-        nombre_recurso = request.nombre_recurso
-        # Supongamos que encontramos la dirección del peer que tiene el recurso
-        direccion_peer = "192.168.1.10"
-        return Servicio_pb2.BuscarRecursoResponse(direccion_peer=direccion_peer)
+app = Flask(__name__)
 
-    def TransferirRecurso(self, request, context):
-        # Lógica para transferir el recurso al peer solicitante
-        nombre_recurso = request.nombre_recurso
-        contenido_recurso = "Contenido del recurso..."
-        return Servicio_pb2.TransferirRecursoResponse(contenido_recurso=contenido_recurso)
+# Base de datos de peers y archivos (usada temporalmente en memoria)
+peers_database = {}
+files_database = {}
 
-def start_server():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    Servicio_pb2_grpc.add_P2PServiceServicer_to_server(P2PServicer(), server)
-    server.add_insecure_port('[::]:50051')
-    server.start()
-    server.wait_for_termination()
+@app.route('/addPeer', methods=['POST'])
+def add_peer():
+    data = request.get_json()
+    peer_id = data.get('peer_id')
+    ip_address = data.get('ip_address')
+    peers_database[peer_id] = ip_address
+    return jsonify({'message': 'Peer added successfully'})
+
+@app.route('/deletePeer', methods=['DELETE'])
+def delete_peer():
+    peer_id = request.args.get('peer_id')
+    if peer_id in peers_database:
+        del peers_database[peer_id]
+        return jsonify({'message': 'Peer deleted successfully'})
+    else:
+        return jsonify({'error': 'Peer not found'})
+
+@app.route('/addFile', methods=['POST'])
+def add_file():
+    data = request.get_json()
+    file_name = data.get('file_name')
+    peer_id = data.get('peer_id')
+    if peer_id in peers_database:
+        if file_name not in files_database:
+            files_database[file_name] = peer_id
+            return jsonify({'message': 'File added successfully'})
+        else:
+            return jsonify({'error': 'File already exists'})
+    else:
+        return jsonify({'error': 'Peer not found'})
+
+@app.route('/deleteFile', methods=['DELETE'])
+def delete_file():
+    file_name = request.args.get('file_name')
+    if file_name in files_database:
+        del files_database[file_name]
+        return jsonify({'message': 'File deleted successfully'})
+    else:
+        return jsonify({'error': 'File not found'})
+
+@app.route('/searchFile', methods=['GET'])
+def search_file():
+    file_name = request.args.get('file_name')
+    if file_name in files_database:
+        peer_id = files_database[file_name]
+        return jsonify({'message': 'File found', 'peer_id': peer_id})
+    else:
+        return jsonify({'error': 'File not found'})
+
+
+
+def run(host='127.0.0.1', port=5000):
+    app.run(debug=True, host=host, port=port)
 
 if __name__ == '__main__':
-    start_server()
+    config = configparser.ConfigParser()
+    config.read('ServerConfig.ini')
+    host = config['server']['host']
+    port = int(config['server']['port'])
+    run(host, port)
