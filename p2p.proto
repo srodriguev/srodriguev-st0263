@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+message UploadRequest {
+  string data = 1;
+}
+
+message UploadResponse {
+  bool success = 1;
+}
+
+message DownloadRequest {
+  // No se requiere ningún campo para la solicitud de descarga
+}
+
+message DownloadResponse {
+  string data = 1;
+}
+
+service P2PService {
+  rpc Upload(UploadRequest) returns (UploadResponse);
+  rpc Download(DownloadRequest) returns (DownloadResponse);
+}

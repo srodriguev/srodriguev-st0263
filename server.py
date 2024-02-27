@@ -16,6 +16,8 @@ def add_peer():
     peers_database[peer_id] = ip_address
     return jsonify({'message': 'Peer added successfully'})
 
+
+
 @app.route('/deletePeer', methods=['DELETE'])
 def delete_peer():
     peer_id = request.args.get('peer_id')
@@ -25,11 +27,14 @@ def delete_peer():
     else:
         return jsonify({'error': 'Peer not found'})
 
+
 @app.route('/addFile', methods=['POST'])
 def add_file():
     data = request.get_json()
-    file_name = data.get('file_name')
     peer_id = data.get('peer_id')
+    file_name = data.get('file_name')
+    print(peers_database)
+    print(peer_id,file_name)
     if peer_id in peers_database:
         if file_name not in files_database:
             files_database[file_name] = peer_id
@@ -48,8 +53,8 @@ def delete_file():
     else:
         return jsonify({'error': 'File not found'})
 
-@app.route('/searchFile', methods=['GET'])
-def search_file():
+@app.route('/searchFile1', methods=['GET'])
+def search_file1():
     file_name = request.args.get('file_name')
     if file_name in files_database:
         peer_id = files_database[file_name]
@@ -57,7 +62,33 @@ def search_file():
     else:
         return jsonify({'error': 'File not found'})
 
+@app.route('/searchFile', methods=['GET'])
+def search_file():
+    file_name = request.args.get('file_name')
+    if file_name in files_database:
+        peer_id = files_database[file_name]
+        if peer_id in peers_database:
+            peer_ip = peers_database[peer_id]  # Obtenemos la dirección IP del peer
+            return jsonify({'message': 'File found', 'peer_id': peer_id, 'ip_address': peer_ip})
+        else:
+            return jsonify({'error': 'Peer not found for file'})
+    else:
+        return jsonify({'error': 'File not found'})
 
+
+
+# --- AUX METHODS ----
+    
+@app.route('/getPeers', methods=['GET'])
+def get_peers():
+    return jsonify(peers_database)
+
+@app.route('/getFiles', methods=['GET'])
+def get_files():
+    return jsonify(files_database)
+
+
+# --- RUN LOOP
 
 def run(host='127.0.0.1', port=5000):
     app.run(debug=True, host=host, port=port)

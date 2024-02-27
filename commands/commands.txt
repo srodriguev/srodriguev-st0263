@@ -1,0 +1,39 @@
+# compilar proto
+python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. p2p.proto
+
+
+# usar postman
+
+Agregar un Peer (addPeer):
+Método: POST
+URL: http://localhost:5000/addPeer
+Tipo de contenido: JSON (application/json)
+Body (raw):
+json
+{
+    "peer_id": "1",
+    "ip_address": "192.168.1.100"
+}
+
+Eliminar un Peer (deletePeer):
+Método: DELETE
+URL: http://localhost:5000/deletePeer?peer_id=1
+
+Agregar un Archivo (addFile):
+Método: POST
+URL: http://localhost:5000/addFile
+Tipo de contenido: JSON (application/json)
+Body (raw):
+json
+{
+    "file_name": "example.txt",
+    "peer_id": "1"
+}
+
+Eliminar un Archivo (deleteFile):
+Método: DELETE
+URL: http://localhost:5000/deleteFile?file_name=example.txt
+
+Buscar un Archivo (searchFile):
+Método: GET
+URL: http://localhost:5000/searchFile?file_name=example.txt
