@@ -1,7 +1,9 @@
 syntax = "proto3";
 
+// Definición de mensajes
 message UploadRequest {
-  string data = 1;
+  string filename = 1;
+  bytes data = 2;
 }
 
 message UploadResponse {
@@ -9,14 +11,27 @@ message UploadResponse {
 }
 
 message DownloadRequest {
-  // No se requiere ningún campo para la solicitud de descarga
+  string filename = 1;
 }
 
 message DownloadResponse {
-  string data = 1;
+  bytes data = 1;
 }
 
+// Nuevo mensaje para la solicitud de lista de archivos
+message ListFilesRequest {
+  // No hay campos necesarios para este ejemplo
+}
+
+// Nuevo mensaje para la respuesta de lista de archivos
+message ListFilesResponse {
+  repeated string files = 1;
+}
+
+// Definición del servicio gRPC
 service P2PService {
   rpc Upload(UploadRequest) returns (UploadResponse);
   rpc Download(DownloadRequest) returns (DownloadResponse);
+  // Nuevo método para listar archivos
+  rpc ListFiles(ListFilesRequest) returns (ListFilesResponse);
 }

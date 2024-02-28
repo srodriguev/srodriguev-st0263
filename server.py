@@ -16,8 +16,6 @@ def add_peer():
     peers_database[peer_id] = ip_address
     return jsonify({'message': 'Peer added successfully'})
 
-
-
 @app.route('/deletePeer', methods=['DELETE'])
 def delete_peer():
     peer_id = request.args.get('peer_id')
@@ -26,7 +24,6 @@ def delete_peer():
         return jsonify({'message': 'Peer deleted successfully'})
     else:
         return jsonify({'error': 'Peer not found'})
-
 
 @app.route('/addFile', methods=['POST'])
 def add_file():

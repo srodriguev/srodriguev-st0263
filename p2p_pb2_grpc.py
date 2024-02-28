@@ -6,7 +6,8 @@ import p2p_pb2 as p2p__pb2
 
 
 class P2PServiceStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """Definición del servicio gRPC
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -24,10 +25,16 @@ class P2PServiceStub(object):
                 request_serializer=p2p__pb2.DownloadRequest.SerializeToString,
                 response_deserializer=p2p__pb2.DownloadResponse.FromString,
                 )
+        self.ListFiles = channel.unary_unary(
+                '/P2PService/ListFiles',
+                request_serializer=p2p__pb2.ListFilesRequest.SerializeToString,
+                response_deserializer=p2p__pb2.ListFilesResponse.FromString,
+                )
 
 
 class P2PServiceServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """Definición del servicio gRPC
+    """
 
     def Upload(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -37,6 +44,13 @@ class P2PServiceServicer(object):
 
     def Download(self, request, context):
         """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListFiles(self, request, context):
+        """Nuevo método para listar archivos
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -54,6 +68,11 @@ def add_P2PServiceServicer_to_server(servicer, server):
                     request_deserializer=p2p__pb2.DownloadRequest.FromString,
                     response_serializer=p2p__pb2.DownloadResponse.SerializeToString,
             ),
+            'ListFiles': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListFiles,
+                    request_deserializer=p2p__pb2.ListFilesRequest.FromString,
+                    response_serializer=p2p__pb2.ListFilesResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
             'P2PService', rpc_method_handlers)
@@ -62,7 +81,8 @@ def add_P2PServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class P2PService(object):
-    """Missing associated documentation comment in .proto file."""
+    """Definición del servicio gRPC
+    """
 
     @staticmethod
     def Upload(request,
@@ -95,5 +115,22 @@ class P2PService(object):
         return grpc.experimental.unary_unary(request, target, '/P2PService/Download',
             p2p__pb2.DownloadRequest.SerializeToString,
             p2p__pb2.DownloadResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListFiles(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/P2PService/ListFiles',
+            p2p__pb2.ListFilesRequest.SerializeToString,
+            p2p__pb2.ListFilesResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
