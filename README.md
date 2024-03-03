@@ -30,7 +30,7 @@ Se puede visualizar que hay en que peer o en el servidor por medio de metodos au
 
 No se configuró la asignación de un peer como suplente de otro en caso de falla, en ese caso el peer que hizo la consulta puede pedirle al servidor principal que elimine el peer inalcanzable y nada mas.
 
-No se usa una base de datos para tener mayor consistencia con los datos.
+No se usa una base de datos con permanencia para tener mayor consistencia con los datos.
 
 # 2. información general de diseño de alto nivel, arquitectura, patrones, mejores prácticas utilizadas.
 

@@ -86,7 +86,7 @@ def search_file(file_name, server_url):
 
 # --- --- --- ---
 
-def upload( filename, data, peer_server_url):
+def upload(filename, data, peer_server_url):
     # Crea un canal gRPC para la comunicación con el servidor
     with grpc.insecure_channel(peer_server_url) as channel:
         # Crea un cliente para el servicio gRPC
@@ -100,12 +100,13 @@ def upload( filename, data, peer_server_url):
             print("Upload successful. Files available are:")
             list_files(peer_server_url)
             index_file(peer_id,filename,server_url)
+            print("file indexed under this new peer")
         else:
             print("Upload failed.")
 
-def download(file_name, server_url):
+def download(file_name, peer_server_url):
     # Crea un canal gRPC para la comunicación con el servidor
-    with grpc.insecure_channel(server_url) as channel:
+    with grpc.insecure_channel(peer_server_url) as channel:
         # Crea un cliente para el servicio gRPC
         stub = p2p_pb2_grpc.P2PServiceStub(channel)
         # Crea una solicitud de descarga con el nombre del archivo
@@ -119,6 +120,8 @@ def download(file_name, server_url):
             upload(file_name,response.data,peer_ip_address)
         else:
             print("Download failed.")
+            # Si la descarga falla, indica al servidor que el peer debe ser eliminado de la red
+            leave(peer_id, peer_ip_address, server_url)
 
 def list_files(server_url):
     # Crea un canal gRPC para la comunicación con el servidor

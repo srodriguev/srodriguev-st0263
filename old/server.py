@@ -34,11 +34,10 @@ def add_file():
     print(peer_id,file_name)
     if peer_id in peers_database:
         if file_name not in files_database:
-            files_database[file_name] = [peer_id]  # Cambiamos a una lista de pares que tienen el archivo para permitir duplicados de files
+            files_database[file_name] = peer_id
             return jsonify({'message': 'File added successfully'})
         else:
-            files_database[file_name].append(peer_id)  # Agregamos el nuevo par a la listaaaa
-            return jsonify({'message': 'File added successfully'})
+            return jsonify({'error': 'File already exists'})
     else:
         return jsonify({'error': 'Peer not found'})
 
@@ -55,13 +54,16 @@ def delete_file():
 def search_file():
     file_name = request.args.get('file_name')
     if file_name in files_database:
-        peer_ids = files_database[file_name]  # Obtenemos la lista de pares que tienen el archivo
-        peer_ids.sort()  # Ordenamos alfabéticamente los IDs de los pares
-        chosen_peer_id = peer_ids[0]  # Tomamos el primero en la lista ordenada
-        peer_ip = peers_database[chosen_peer_id]  # Obtenemos la dirección IP del par
-        return jsonify({'message': 'File found', 'peer_id': chosen_peer_id, 'ip_address': peer_ip})
+        peer_id = files_database[file_name]
+        if peer_id in peers_database:
+            peer_ip = peers_database[peer_id]  # Obtenemos la dirección IP del peer
+            return jsonify({'message': 'File found', 'peer_id': peer_id, 'ip_address': peer_ip})
+        else:
+            return jsonify({'error': 'Peer not found for file'})
     else:
         return jsonify({'error': 'File not found'})
+
+
 
 # --- AUX METHODS ----
     

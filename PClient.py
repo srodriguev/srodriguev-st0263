@@ -7,6 +7,8 @@ import requests
 
 #ip de este peer
 peer_ip_address = ""
+# nombre del peer
+peer_id = ""
 # URL (fallback) del servidor principal
 SERVER_URL = "http://localhost:5000"  
 server_url = SERVER_URL
@@ -84,9 +86,9 @@ def search_file(file_name, server_url):
 
 # --- --- --- ---
 
-def upload( filename, data, server_url):
+def upload(filename, data, peer_server_url):
     # Crea un canal gRPC para la comunicación con el servidor
-    with grpc.insecure_channel(server_url) as channel:
+    with grpc.insecure_channel(peer_server_url) as channel:
         # Crea un cliente para el servicio gRPC
         stub = p2p_pb2_grpc.P2PServiceStub(channel)
         # Crea una solicitud de carga con el nombre del archivo y los datos
@@ -96,13 +98,15 @@ def upload( filename, data, server_url):
         # Maneja la respuesta del servidor
         if response.success:
             print("Upload successful. Files available are:")
-            list_files(server_url)
+            list_files(peer_server_url)
+            index_file(peer_id,filename,server_url)
+            print("file indexed under this new peer")
         else:
             print("Upload failed.")
 
-def download(file_name, server_url):
+def download(file_name, peer_server_url):
     # Crea un canal gRPC para la comunicación con el servidor
-    with grpc.insecure_channel(server_url) as channel:
+    with grpc.insecure_channel(peer_server_url) as channel:
         # Crea un cliente para el servicio gRPC
         stub = p2p_pb2_grpc.P2PServiceStub(channel)
         # Crea una solicitud de descarga con el nombre del archivo
@@ -116,6 +120,8 @@ def download(file_name, server_url):
             upload(file_name,response.data,peer_ip_address)
         else:
             print("Download failed.")
+            # Si la descarga falla, indica al servidor que el peer debe ser eliminado de la red
+            leave(peer_id, peer_ip_address, server_url)
 
 def list_files(server_url):
     # Crea un canal gRPC para la comunicación con el servidor
@@ -165,7 +171,6 @@ def main():
 
     # Indexar un archivo
     #index_file(peer_id,"file_02A.txt",server_url)
-
 
     # Buscar un archivo por su nombre
     #search_file("file_TEST.txt", server_url)
