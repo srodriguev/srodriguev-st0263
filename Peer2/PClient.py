@@ -7,6 +7,8 @@ import requests
 
 #ip de este peer
 peer_ip_address = ""
+# nombre del peer
+peer_id = ""
 # URL (fallback) del servidor principal
 SERVER_URL = "http://localhost:5000"  
 server_url = SERVER_URL
@@ -84,9 +86,9 @@ def search_file(file_name, server_url):
 
 # --- --- --- ---
 
-def upload( filename, data, server_url):
+def upload( filename, data, peer_server_url):
     # Crea un canal gRPC para la comunicación con el servidor
-    with grpc.insecure_channel(server_url) as channel:
+    with grpc.insecure_channel(peer_server_url) as channel:
         # Crea un cliente para el servicio gRPC
         stub = p2p_pb2_grpc.P2PServiceStub(channel)
         # Crea una solicitud de carga con el nombre del archivo y los datos
@@ -96,7 +98,8 @@ def upload( filename, data, server_url):
         # Maneja la respuesta del servidor
         if response.success:
             print("Upload successful. Files available are:")
-            list_files(server_url)
+            list_files(peer_server_url)
+            index_file(peer_id,filename,server_url)
         else:
             print("Upload failed.")
 
@@ -148,8 +151,10 @@ def get_peer_config():
 
 def main():
     # Obtener la configuración del archivo de configuración
+    global peer_id
     peer_id, host, port, server_host, server_port = get_peer_config()
     
+
     global peer_ip_address
     peer_ip_address = f"{host}:{port}"
 

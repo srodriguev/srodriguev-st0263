@@ -50,15 +50,6 @@ def delete_file():
     else:
         return jsonify({'error': 'File not found'})
 
-@app.route('/searchFile1', methods=['GET'])
-def search_file1():
-    file_name = request.args.get('file_name')
-    if file_name in files_database:
-        peer_id = files_database[file_name]
-        return jsonify({'message': 'File found', 'peer_id': peer_id})
-    else:
-        return jsonify({'error': 'File not found'})
-
 @app.route('/searchFile', methods=['GET'])
 def search_file():
     file_name = request.args.get('file_name')

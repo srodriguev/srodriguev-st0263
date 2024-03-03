@@ -7,6 +7,8 @@ import requests
 
 #ip de este peer
 peer_ip_address = ""
+# nombre del peer
+peer_id = ""
 # URL (fallback) del servidor principal
 SERVER_URL = "http://localhost:5000"  
 server_url = SERVER_URL
@@ -97,6 +99,7 @@ def upload(filename, data, server_url):
         if response.success:
             print("Upload successful. Files available are:")
             list_files(server_url)
+            index_file(peer_ip_address,filename,server_url)
         else:
             print("Upload failed.")
 
@@ -148,6 +151,7 @@ def get_peer_config():
 
 def main():
     # Obtener la configuración del archivo de configuración
+    global peer_id
     peer_id, host, port, server_host, server_port = get_peer_config()
     
     global peer_ip_address

@@ -22,9 +22,15 @@ El pPeer.py es el script que representa un nodo de la red peer-to-peer.
 Se cumplió con la meta de tener un sistema peer 2 peer que intercambie archivos, que por ahora son archivos simbolicos a modo de cadenas de texto. 
 Estas se actualizan en una carpeta local que funciona como base de datos sencilla.
 
+Se pueden bajar y subir archivos txt y sus contenidos.
+
+Se puede visualizar que hay en que peer o en el servidor por medio de metodos auxiliares.
+
 ## 1.2. Que aspectos NO cumplió o desarrolló de la actividad propuesta por el profesor (requerimientos funcionales y no funcionales)
 
 No se configuró la asignación de un peer como suplente de otro en caso de falla, en ese caso el peer que hizo la consulta puede pedirle al servidor principal que elimine el peer inalcanzable y nada mas.
+
+No se usa una base de datos para tener mayor consistencia con los datos.
 
 # 2. información general de diseño de alto nivel, arquitectura, patrones, mejores prácticas utilizadas.
 
@@ -52,14 +58,14 @@ Lenguaje de programación: Python
 Versión de Python: Python 3.10.9
 
 Librerías y paquetes:
-gRPC: Se utiliza para la comunicación entre clientes y servidores en el sistema P2P.
-grpcio: La implementación de gRPC para Python.
-grpcio-tools: Herramientas para la generación de código gRPC en Python.
-configparser: Utilizado para leer archivos de configuración INI.
-os: Para operaciones relacionadas con el sistema operativo, como la manipulación de rutas de archivos.
-requests: Para realizar solicitudes HTTP a través del protocolo REST API.
-concurrent.futures: Para ejecutar operaciones de manera asíncrona.
-grpc-reflection: Para habilitar la reflexión del servicio gRPC.
+* gRPC: Se utiliza para la comunicación entre clientes y servidores en el sistema P2P.
+* grpcio: La implementación de gRPC para Python.
+* grpcio-tools: Herramientas para la generación de código gRPC en Python.
+* configparser: Utilizado para leer archivos de configuración INI.
+* os: Para operaciones relacionadas con el sistema operativo, como la manipulación de rutas de archivos.
+* requests: Para realizar solicitudes HTTP a través del protocolo REST API.
+* concurrent.futures: Para ejecutar operaciones de manera asíncrona.
+* grpc-reflection: Para habilitar la reflexión del servicio gRPC.
 
 ## como se compila y ejecuta.
 
@@ -141,7 +147,10 @@ python3 pServer.py & python3 pClient.py
 
 # referencias:
 <debemos siempre reconocer los créditos de partes del código que reutilizaremos, así como referencias a youtube, o referencias bibliográficas utilizadas para desarrollar el proyecto o la actividad>
-## https://www.linkedin.com/pulse/implementing-peer-to-peer-data-exchange-inpython-luis-soares-m-sc-/ - Luis Soarez. Implementing Peer-to-Peer Data Exchange in Python
-## sitio2-url
-## url de donde tomo info para desarrollar este proyecto
+## (https://www.linkedin.com/pulse/implementing-peer-to-peer-data-exchange-inpython-luis-soares-m-sc-/) - Luis Soarez. Implementing Peer-to-Peer Data Exchange in Python
+## (https://grpc.io/docs/languages/go/basics/) - Tutoriales de gRPC
+## (https://grpc.io/docs/languages/python/basics/) - Tutoriales de gRPC
+## (https://www.ramonmillan.com/libros/librodistribucionlibrosredesp2p/distribucionlibrosredesp2p_caracteristicasp2p.php) - caracteristicas de redes p2p
+## (https://www.tutorialspoint.com/flask/index.htm) - Tutorial de Flask
+## (https://www.redsauce.net/blog/es/postman-quick-guide) - Guia rapida de Postman
 
