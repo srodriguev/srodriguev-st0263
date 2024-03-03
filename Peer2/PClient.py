@@ -20,7 +20,7 @@ def join(peer_id, ip_address, server_url):
     }
 
     # Enviar la solicitud POST al servidor principal para unirse a la red
-    response = requests.post(f"{server_url}/addPeer", json=data)
+    response = requests.post(f"http://{server_url}/addPeer", json=data)
     if response.status_code == 200:
         print("Joined the network successfully.")
         print("Server response:", response.json())
@@ -37,7 +37,7 @@ def index_file(peer_id, file_name, server_url):
     }
 
     # Enviar la solicitud POST al servidor principal para indexar el archivo
-    response = requests.post(f"{server_url}/addFile", json=data)
+    response = requests.post(f"http://{server_url}/addFile", json=data)
     if response.status_code == 200:
         print("File indexed successfully.")
         print("Server response:", response.json())
@@ -55,7 +55,7 @@ def leave(peer_id, ip_address, server_url):
     }
 
     # Enviar la solicitud DELETE al servidor principal para abandonar la red
-    response = requests.delete(f"{server_url}/deletePeer", params=data)
+    response = requests.delete(f"http://{server_url}/deletePeer", params=data)
     if response.status_code == 200:
         print("Left the network successfully.")
         print("Server response:", response.json())
@@ -65,7 +65,7 @@ def leave(peer_id, ip_address, server_url):
 
 def search_file(file_name, server_url):
     # Enviar la solicitud GET al servidor principal para buscar el archivo
-    response = requests.get(f"{server_url}/searchFile", params={'file_name': file_name})
+    response = requests.get(f"http://{server_url}/searchFile", params={'file_name': file_name})
     if response.status_code == 200:
         data = response.json()
         if 'peer_id' in data:
@@ -85,13 +85,13 @@ def search_file(file_name, server_url):
 
 # --- --- --- ---
 
-def upload(data, server_url):
+def upload( filename, data, server_url):
     # Crea un canal gRPC para la comunicación con el servidor
     with grpc.insecure_channel(server_url) as channel:
         # Crea un cliente para el servicio gRPC
         stub = p2p_pb2_grpc.P2PServiceStub(channel)
-        # Crea una solicitud de carga
-        request = p2p_pb2.UploadRequest(data=data)
+        # Crea una solicitud de carga con el nombre del archivo y los datos
+        request = p2p_pb2.UploadRequest(filename=filename, data=data)
         # Envía la solicitud al servidor
         response = stub.Upload(request)
         # Maneja la respuesta del servidor
@@ -114,7 +114,7 @@ def download(file_name, server_url):
         if response.data:
             print("Downloaded data:", response.data)
             print("will upload: ", response.data, "to: ", peer_ip_address, "direction")
-            upload(response.data,peer_ip_address)
+            upload(file_name,response.data,peer_ip_address)
         else:
             print("Download failed.")
 
@@ -165,13 +165,45 @@ def main():
     join(peer_id, peer_ip_address, server_url)
 
     # Indexar un archivo
-    index_file(peer_id,"file_aa",server_url)
-    index_file(peer_id,"file_bb",server_url)
-    index_file(peer_id,"file_cc",server_url)
+    index_file(peer_id,"file_02A",server_url)
+    index_file(peer_id,"file_02B",server_url)
+    index_file(peer_id,"file_02C",server_url)
 
     # Buscar un archivo por su nombre
-    search_file("file1", server_url)
-    search_file("file_aa", server_url)
+    search_file("file_TEST", server_url)
+    search_file("file_01B", server_url)
+
+    # Imprimir la lista de métodos disponibles
+    print("\nMétodos disponibles:")
+    print("1. Listar archivos")
+    print("2. Subir archivo")
+    print("3. Descargar archivo")
+    print("4. Buscar en la red")
+    print("5. Salir")
+
+    # Esperar instrucciones del usuario
+    while True:
+        choice = input("\nSeleccione un método (1-4): ")
+        if choice == "1":
+            list_files(peer_ip_address)
+        elif choice == "2":
+            file_name = input("Ingrese el nombre del archivo a subir: ")
+            file_data = input("Ingrese los datos del archivo a subir: ")
+            upload(file_name, file_data, peer_ip_address)
+        elif choice == "3":
+            file_name = input("Ingrese el nombre del archivo a descargar: ")
+            download(file_name, peer_ip_address)   
+        elif choice == "4":
+            file_name = input("Ingrese el nombre del archivo a buscar: ")
+            search_file(file_name, server_url)
+        elif choice == "5":
+            print("Saliendo del programa...")
+            # Abandonar la red antes de salir
+            leave(peer_id, peer_ip_address, server_url)
+            break
+            #break
+        else:
+            print("Opción no válida. Por favor, seleccione un número del 1 al 5.")
 
 
 if __name__ == "__main__":
