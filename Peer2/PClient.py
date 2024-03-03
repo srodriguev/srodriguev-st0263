@@ -11,7 +11,6 @@ peer_ip_address = ""
 SERVER_URL = "http://localhost:5000"  
 server_url = SERVER_URL
 
-
 def join(peer_id, ip_address, server_url):
     # Datos a enviar al servidor principal
     data = {
@@ -165,13 +164,13 @@ def main():
     join(peer_id, peer_ip_address, server_url)
 
     # Indexar un archivo
-    index_file(peer_id,"file_02A",server_url)
-    index_file(peer_id,"file_02B",server_url)
-    index_file(peer_id,"file_02C",server_url)
+    index_file(peer_id,"file_02A.txt",server_url)
+    index_file(peer_id,"file_02B.txt",server_url)
+    index_file(peer_id,"file_02C.txt",server_url)
 
     # Buscar un archivo por su nombre
-    search_file("file_TEST", server_url)
-    search_file("file_01B", server_url)
+    search_file("file_TEST.txt", server_url)
+    search_file("file_01B.txt", server_url)
 
     # Imprimir la lista de métodos disponibles
     print("\nMétodos disponibles:")

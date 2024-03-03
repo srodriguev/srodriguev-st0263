@@ -24,7 +24,7 @@ class P2PService(p2p_pb2_grpc.P2PServiceServicer):
         # Guardar el archivo recibido en el sistema de archivos
         file_storage_folder = config['peer']['file_storage']
         file_path = os.path.join(file_storage_folder, request.filename)
-        with open(file_path, 'w') as file:
+        with open(file_path, 'wb') as file:
             file.write(request.data)
 
         success = True  # Asumimos que la carga siempre es exitosa
@@ -37,6 +37,7 @@ class P2PService(p2p_pb2_grpc.P2PServiceServicer):
         # Verificamos si el archivo solicitado está en la lista de archivos simbólicos
         print("Received download request for: ", request.filename)
         if request.filename in symbolic_files:
+            print("File found")
             # Si está presente, enviamos los datos del archivo al cliente
             file_data = symbolic_files[request.filename]
             # Convertir el contenido del archivo a bytes
@@ -44,6 +45,7 @@ class P2PService(p2p_pb2_grpc.P2PServiceServicer):
             return p2p_pb2.DownloadResponse(data=file_data_bytes)
             # return p2p_pb2.DownloadResponse(data=file_data)
         else:
+            print("File NOTfound")
             # Si no está presente, indicamos al cliente que el archivo no está disponible para descarga
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details(f"El archivo '{request.filename}' no se encontró en el servidor.")
