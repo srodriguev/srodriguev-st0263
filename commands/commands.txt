@@ -1,3 +1,30 @@
+# AWS
+
+chmod 400 /Users/makata/Documents/05_TOPICOS_TELEMATICA/RETOS_0102/peer-claves.pem
+ssh -i /Users/makata/Documents/05_TOPICOS_TELEMATICA/RETOS_0102/peer-claves.pem ubuntu@34.203.225.214
+
+sudo apt-get update
+sudo apt-get upgrade
+
+sudo apt-get install python3
+sudo apt-get install python3-pip
+
+sudo apt install net-tools
+
+sudo pip install grpcio grpcio-tools configparser requests grpcio-reflection flask
+
+sudo git clone https://github.com/srodriguev/srodriguev-st0263.git
+
+---
+
+python3 pServer.py && python3 pClient.py
+
+nano ServerConfig.ini
+
+
+
+
+
 # compilar proto
 python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. p2p.proto
 

@@ -103,6 +103,8 @@ nano peerConfig.ini
 
 ## opcionalmente - si quiere mostrar resultados o pantallazos 
 
+Corriendolo local:
+![local](https://i.imgur.com/CV1pkHO.png)
 
 
 # 4. Descripción del ambiente de EJECUCIÓN (en producción) lenguaje de programación, librerias, paquetes, etc, con sus numeros de versiones.
@@ -117,11 +119,26 @@ Los parametros se configuran dentro del archivo config.
 
 ## una mini guia de como un usuario utilizaría el software o la aplicación
 
-Primero debe instalar las librerias. 
+Si vamos a usarlo en AWS con EC2 se deben instalar varias herramientas y librerias con sudo.
 
 ```command line
 
-pip install grpcio grpcio-tools configparser requests grpcio-reflection
+# AWS
+
+chmod 400 /Users/makata/Documents/05_TOPICOS_TELEMATICA/RETOS_0102/peer-claves.pem
+ssh -i /Users/makata/Documents/05_TOPICOS_TELEMATICA/RETOS_0102/peer-claves.pem ubuntu@34.203.225.214
+
+sudo apt-get update
+sudo apt-get upgrade
+
+sudo apt-get install python3
+sudo apt-get install python3-pip
+
+sudo apt install net-tools
+
+sudo pip install grpcio grpcio-tools configparser requests grpcio-reflection flask
+
+sudo git clone https://github.com/srodriguev/srodriguev-st0263.git
 
 ```
 
@@ -129,7 +146,7 @@ Luego correr el server principal
 
 ```command line
 
-python3 server.py
+sudo python3 server.py
 
 ```
 
@@ -137,11 +154,15 @@ Luego, recomendablemente en sus propias carpetas, por orden, correr los dos serv
 
 ```command line
 
-python3 pServer.py & python3 pClient.py
+sudo python3 pServer.py & python3 pClient.py
 
 ```
 
 ## opcionalmente - si quiere mostrar resultados o pantallazos 
+
+Corriendolo en AWS
+![AWS](https://i.imgur.com/QV1Vpxz.png)
+
 
 # 5. otra información que considere relevante para esta actividad.
 
